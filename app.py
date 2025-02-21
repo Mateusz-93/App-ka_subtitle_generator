@@ -1,11 +1,11 @@
 import streamlit as st
 from pydub import AudioSegment
-from IPython.display import Markdown
 from dotenv import dotenv_values
 from hashlib import md5
 from openai import OpenAI
 from io import BytesIO
 import base64
+from qdrant_client import QdrantClient
 
 def image_to_base64(image_path):
     with open(image_path, "rb") as image_file:
@@ -31,6 +31,13 @@ def transcribe_audio(audio_bytes):
     )
 
     return transcript
+
+@st.cache_resource
+def get_qdrant_client():
+    return QdrantClient(
+    url=env["QDRANT_URL"], 
+    api_key=env["QDRANT_API_KEY"],
+)
 
 # Tytuł aplikacji
 st.title("App'ka do generowania napisów")
